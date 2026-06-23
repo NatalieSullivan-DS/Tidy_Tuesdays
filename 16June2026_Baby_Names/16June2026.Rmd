@@ -172,6 +172,8 @@ isla <- filter(scot5, Name == "Isla")
 # Plot the Isla data over time
 isla %>% ggplot(aes(x = Year, y = Rank)) + geom_col()
 ```
+
+
 ### Overview of findings
 
 A quick view of the data frame shows the rank for both girls' names for each year, and they appear in at least the top 3 for each of those years, meaning they outrank the boys' names in each year except 2021, when Isla was 3rd. Although, Olivia was ranked 1st that year. 
@@ -201,7 +203,7 @@ noah %>% ggplot(aes(x = Year, y = Rank)) + geom_col()
 
 ### Even More Interesting!!!
 
-The ranks show on a scale of hundreds up to 800, which meant that in the data Noah is ranked much further down the scale for 2021 and 2023. However, a quick view at the data frame shows the reason for this scale. In 2021 and 2023, there were a few girls names Noah! Since the rank is low (only 3 girls were named Noah in each of the years), I will eliminate the times Noah is ranked in the girls' names and rerun the plots.
+The ranks show on a scale of hundreds up to 800, which meant that in the data Noah is ranked much further down the scale for 2021 and 2023. However, a quick view at the data frame shows the reason for this scale. In 2021 and 2023, there were a few girls named Noah! Since the rank is low (only 3 girls were named Noah in each of the years), I will eliminate the times Noah is ranked in the girls' names and rerun the plots.
 
 #### Noah minus the girls
 
