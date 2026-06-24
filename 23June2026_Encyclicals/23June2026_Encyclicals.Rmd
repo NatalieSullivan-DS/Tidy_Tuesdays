@@ -1,0 +1,121 @@
+---
+title: "Tidy Tuesday - June 23, 2026 - Papal Encyclicals"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## My Second Week of Tidy Tuesday Fun - Papal Encyclicals
+
+A quick glance at the data frames shows that the data contains interesting sayings from popes over the years. I'm excited to explore what lies in the data
+
+
+### Load the packages and the data
+
+```{r loadPackages, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+library(here)
+library(stringr)
+library(tidytext)
+```
+
+
+```{r loadData}
+encyc <- read_csv(here("23June2026_Encyclicals","raw_encyclicals.csv"))
+papal <- read_csv(here("23June2026_Encyclicals","raw_papal.csv"))
+scrip <- read_csv(here("23June2026_Encyclicals","raw_scripture.csv"))
+```
+
+
+### Curious about the scripture reference dataset
+
+```{r scriptureDataset}
+# which popes are in the dataset
+unique(scrip$pope)
+# what books of the Bible are referenced in the dataset
+unique(scrip$book)
+# what years are in the dataset
+unique(scrip$year)
+```
+
+I'd like to know how many times each unique book is referenced.
+
+### Plot the times each unique book of the Bible is referenced
+
+
+```{r plotBooksBible}
+# create a plot to show number of times books are referenced
+scrip |> ggplot(aes(x = book)) + geom_bar() + coord_flip()
+```
+
+So, Matthew and Genesis are the top two referenced. It's interesting that a Gospel and the Beginnings books are the most popular. Which of the two unique popes, Leo XIII or Leo XIV, referenced Matthew and Genesis more.
+
+
+### Who used which book more?
+
+```{r bookByPope}
+# plot Matthew and Genesis by Pope
+scrip |> filter(book == "Matthew" | book == "Genesis") |>  ggplot(aes(x=pope, fill = book)) + geom_bar()
+```
+
+### Looking at the Encyclical dataset
+
+```{r encyclicalDataset}
+# how many years in the dataset
+unique(encyc$year) # only 1891 and 2026
+# which popes in the dataset
+unique(encyc$pope) # only Leo XIII and Leo XIV
+```
+
+### Looking at the Papal dataset
+
+```{r papalDataset}
+# how many years in the dataset
+unique(papal$year)
+# which popes in the dataset
+unique(papal$pope)
+# which countries in the dataset
+unique(papal$birth_country)
+```
+
+### How many popes were born in each country represented?
+
+```{r countries}
+# narrow down the data by pope and distinct birth_country
+pope_total <- papal |> distinct(pope, birth_country)
+# display the number of popes by country
+pope_total |> ggplot(aes(x=birth_country)) + geom_bar()
+```
+
+
+### Sentiment Analysis
+
+I'm going to attempt a sentiment analysis on the Encyclical dataset. I've only done it in Python, but I'm going to research "tidytext" in R.
+
+
+```{r sentimentAnalysis}
+# tokenize the text column into individual words
+tokenization <- encyc |> unnest_tokens(word, text)
+
+# remove stop words
+clean_data <- tokenization |> anti_join(stop_words)
+
+# add the sentiment to popes' words using "bing"
+sentiments <- clean_data |> inner_join(get_sentiments("bing"))
+
+# attribute to each pope his positive and negative counts
+pope_sentiment <- sentiments |> group_by(pope, sentiment) |> summarize(counts = n())
+```
+
+
+### Sentiment Analysis Plot
+
+```{r sentimentPlot}
+# display the popes' sentiments
+pope_sentiment |> ggplot(aes(x=sentiment, y=counts, fill=pope)) + geom_col()
+```
+
+Pope Leo XIV has technology on his side with the ability to produce more encyclicals than Pope Leo XIII had. Also, it appears that Pope Leo XIII was equally encouraging and warning and in his encyclicals, while Pope Leo XIV has been more encouraging than warning.
