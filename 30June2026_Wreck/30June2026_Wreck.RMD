@@ -74,3 +74,47 @@ wwii_counts |> ggplot(aes(x = fct_reorder(word, count), y = count)) + geom_col(f
 
 ```
 
+
+### Advanced data analysis with Gemini
+
+I asked Gemini to help walk me through how to conduct a more advanced data analysis. First, we are going to see how the cause of wrecks changed over time. Then, we are going to try to map the data using the latitude and longitude data, but first I want to find out if this is viable. How many missing latitude values are there?
+
+```{r findNAs}
+wwii |> summarize(missing_lat = sum(is.na(latitude)))
+```
+
+There are 168 out of 648 total missing latitude values, which is viable. Let's focus on the cause of wrecks over time first.
+
+#### Cause of Wrecks Over Time
+
+```{r wrecksCause}
+# reorganize the data by year and word
+wwii_words_by_year <- wwii_words |> 
+  pivot_longer(
+    cols = c(attack, bomb, torpedo, mine, sunk),
+    names_to = "word",
+    values_to = "count"
+  ) |> group_by(year, word) |> summarize(count = sum(count))
+
+# create a line plot of the data
+wwii_words_by_year |> ggplot(aes(x = year, y = count, group = word, color = word)) + geom_line() + labs(x = "Year", y = "Frequency", color = "Wreck Cause") + theme_minimal() + scale_x_continuous(breaks = 1939:1945)
+```
+
+In 1940, torpedoes and being sunk were among the highest cause of wrecks, but these causes decrease over time until the last tow years of the war when torpedoes and being sunk increase again.
+
+
+#### Spatial Mapping the Wrecks
+
+Now we'll use the latitude and longitude data to map the wrecks.
+
+```{r mapWrecks}
+# remove rows with missing values
+wwii_map_data <- wwii |> drop_na(latitude, longitude)
+
+# plot a map
+ggplot() +
+  borders("world", colour = "gray85", fill = "gray90") +
+  coord_quickmap(xlim = c(-30, 10), ylim = c(45, 62)) +
+  theme_minimal() + geom_point(data = wwii_map_data, aes(x=longitude, y=latitude), alpha = 0.4, color = "blue") + labs(x = "Longitude", y = "Latitude", title = "World War II Wrecks Map 1939 to 1945")
+```
+

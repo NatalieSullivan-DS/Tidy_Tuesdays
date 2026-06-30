@@ -21,4 +21,6 @@ to get some practice.
 
 - [Wreck Inventory](./30June2026_Wreck/30June2026_Wreck.md) -
   *Identified and plotted several keywords found in the wreck
-  descriptions for the WWII era (1939-1945) of the dataset*
+  descriptions for the WWII era (1939-1945); plotted wreck causes over
+  time based on the keywords and a spatial map of the wrecks for the
+  dataset (with assistance)*
