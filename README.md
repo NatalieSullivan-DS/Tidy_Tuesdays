@@ -18,3 +18,7 @@ to get some practice.
   *Conducted a sentiment analysis on Pope Leo XIII’s and Pope Leo XIV’s
   encyclicals and discovered that while XIII was equally encouraging and
   warning, XIV is more encouraging than warning*
+
+- [Wreck Inventory](./30June2026_Wreck/30June2026_Wreck.md) -
+  *Identified and plotted several keywords found in the wreck
+  descriptions for the WWII era (1939-1945) of the dataset*
